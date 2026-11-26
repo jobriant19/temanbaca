@@ -1,0 +1,10 @@
+/vendor
+/node_modules
+/.env
+/tests
+/storage/logs
+/storage/framework
+/bootstrap/cache/*.php
+package.json
+vite.config.js
+phpunit.xml
