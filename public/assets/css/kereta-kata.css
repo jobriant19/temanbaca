@@ -1,0 +1,127 @@
+/* Kereta Kata: dialog pengaturan/jeda/hasil + layar game penuh (HUD, kontrol, efek).
+   Memakai font, .tombol dan .dialog dari komponen.css. Semua kelas baru diawali kk-. Dialog selalu bernuansa gelap agar seragam dengan panduan. */
+
+/* ---------- Dialog ---------- */
+.kk-dialog {
+    --ink: #f1f3ff; --muted: #b9bfea; --kaca-kuat: rgba(26, 24, 74, .92); --tepi: rgba(160, 170, 255, .3); --solid: #2a2670; --aksen: #9a88ff;
+    --tombol: linear-gradient(135deg, #7a5cff, #20d6c2); --glow: rgba(110, 120, 255, .55);
+    width: min(36rem, 94vw); max-height: 92dvh; padding: 0; font-family: "Fredoka", var(--font);
+}
+.kk-dialog--kecil { width: min(24rem, 92vw); }
+.kk-kepala { position: relative; display: flex; align-items: center; gap: 1rem; padding: 1.2rem 3.8rem 1.2rem 1.3rem; color: #fff; overflow: hidden; background: var(--tombol); }
+.kk-kepala::before, .kk-kepala::after { content: ""; position: absolute; border-radius: 50%; background: rgba(255, 255, 255, .16); pointer-events: none; }
+.kk-kepala::before { width: 9rem; height: 9rem; right: -2.5rem; top: -4.5rem; }
+.kk-kepala::after { width: 5rem; height: 5rem; right: 3.5rem; bottom: -3rem; }
+.kk-kepala > div { position: relative; min-width: 0; }
+.kk-kepala h2 { font-family: "Lilita One", var(--font); font-weight: 400; font-size: clamp(1.5rem, 5vw, 2rem); line-height: 1.1; letter-spacing: .02em; text-shadow: 0 .1em 0 rgba(0, 0, 0, .22); }
+.kk-kepala p { margin: .15rem 0 0; font-size: .95rem; font-weight: 600; color: rgba(255, 255, 255, .92); }
+.kk-kepala--tengah { justify-content: center; text-align: center; padding: 1.3rem; }
+.kk-kepala__lencana { flex: none; display: grid; place-items: center; width: 3.4rem; height: 3.4rem; border-radius: 1.1rem; font-size: 1.9rem; color: #2f6bff; background: #fff; box-shadow: 0 .25rem 0 rgba(0, 0, 0, .18); rotate: -6deg; }
+.kk-tutup { position: absolute; z-index: 1; top: .8rem; right: .9rem; display: grid; place-items: center; width: 2.2rem; height: 2.2rem; padding: 0; border: 0; border-radius: 50%; font: 700 1.5rem/1 var(--font); color: #fff; cursor: pointer; background: rgba(255, 255, 255, .26); transition: transform .25s cubic-bezier(.3, 1.8, .5, 1), background .2s; }
+.kk-tutup:hover { transform: rotate(90deg) scale(1.1); background: rgba(255, 255, 255, .4); }
+.kk-isi { display: grid; gap: 1rem; padding: 1.2rem 1.4rem 1.4rem; }
+.kk-bidang { display: grid; gap: .45rem; min-width: 0; margin: 0; padding: 0; border: 0; }
+.kk-bidang__judul { padding: 0; font-weight: 700; font-size: .95rem; letter-spacing: .02em; color: var(--muted); }
+.kk-bidang input[type="text"] { width: 100%; padding: .7rem 1rem; border: 2px solid var(--tepi); border-radius: 1rem; font: 600 1.15rem "Fredoka", var(--font); color: var(--ink); background: rgba(255, 255, 255, .08); outline: none; transition: border-color .2s, box-shadow .2s; }
+.kk-bidang input[type="text"]::placeholder { color: rgba(185, 191, 234, .6); }
+.kk-bidang input[type="text"]:focus { border-color: #20d6c2; box-shadow: 0 0 0 4px rgba(32, 214, 194, .25); }
+.kk-pilih { display: grid; gap: .6rem; }
+.kk-pilih--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.kk-opsi { position: relative; display: block; min-width: 0; }
+.kk-opsi input { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.kk-opsi__isi { --c1: #7a5cff; --c2: #20d6c2; display: grid; justify-items: center; align-content: center; gap: .1rem; min-height: 4.6rem; padding: .6rem .3rem; text-align: center; border: 2px solid var(--tepi); border-radius: 1.15rem; background: rgba(255, 255, 255, .07); transition: transform .2s cubic-bezier(.3, 1.6, .5, 1), background .2s, border-color .2s, box-shadow .2s; }
+.kk-opsi:hover .kk-opsi__isi { transform: translateY(-2px); border-color: rgba(255, 255, 255, .55); }
+.kk-opsi input:checked + .kk-opsi__isi { transform: translateY(-3px); color: #fff; border-color: #fff; background: linear-gradient(135deg, var(--c1), var(--c2)); box-shadow: 0 12px 22px -10px var(--c1); }
+.kk-opsi input:focus-visible + .kk-opsi__isi { outline: 3px solid #fff; outline-offset: 2px; }
+.kk-opsi--mudah { --c1: #0fa968; --c2: #7cc22b; } .kk-opsi--sedang { --c1: #ff8a3d; --c2: #ffc400; } .kk-opsi--sulit { --c1: #ff3d6e; --c2: #c846d9; } .kk-opsi--jenis { --c1: #3b7bff; --c2: #12a9d9; }
+.kk-opsi__isi b { font: 400 1.2rem/1.1 "Lilita One", var(--font); letter-spacing: .02em; }
+.kk-opsi__isi small { font-size: .74rem; font-weight: 600; opacity: .85; }
+.kk-opsi__isi em { font: normal 400 1.05rem/1.1 "Lilita One", var(--font); letter-spacing: .02em; }
+.kk-mini { width: .85em; height: .85em; vertical-align: -.1em; fill: #ff5d8f; }
+.kk-suara { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem .9rem; }
+.kk-suara p, .kk-petunjuk-dialog { margin: 0; font-size: .82rem; line-height: 1.4; color: var(--muted); flex: 1 1 12rem; }
+.kk-aksi { display: flex; gap: .7rem; justify-content: flex-end; }
+.kk-aksi .tombol--main { flex: 1 1 auto; justify-content: center; }
+.kk-tumpuk { display: grid; gap: .6rem; }
+.kk-tumpuk .tombol { width: 100%; justify-content: center; }
+.kk-bintang { display: flex; justify-content: center; gap: .4rem; }
+.kk-bintang svg { width: 3.4rem; fill: rgba(255, 255, 255, .16); }
+.kk-bintang svg:nth-child(2) { translate: 0 -.6rem; }
+.kk-bintang .nyala { fill: #ffd23f; filter: drop-shadow(0 0 .6rem rgba(255, 210, 63, .7)); animation: kk-bintang-masuk .6s cubic-bezier(.3, 1.8, .5, 1) backwards; }
+.kk-bintang svg:nth-child(2).nyala { animation-delay: .25s; } .kk-bintang svg:nth-child(3).nyala { animation-delay: .5s; }
+@keyframes kk-bintang-masuk { from { transform: scale(0) rotate(-120deg); } }
+.kk-statistik { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; margin: 0; }
+.kk-statistik div { display: grid; padding: .6rem .8rem; border-radius: 1rem; background: rgba(255, 255, 255, .08); box-shadow: inset 0 0 0 1px var(--tepi); }
+.kk-statistik dt { font-size: .78rem; font-weight: 600; color: var(--muted); }
+.kk-statistik dd { margin: 0; font: 400 1.5rem/1.15 "Lilita One", var(--font); color: #ffe066; }
+
+/* ---------- Layar game penuh ---------- */
+html.sedang-main .latar, html.sedang-main .header, html.sedang-main .utama { display: none; }
+.kk { --tombol: linear-gradient(135deg, #17b26a, #7cc22b); --glow: rgba(40, 190, 100, .6);
+    position: fixed; inset: 0; z-index: 60; overflow: hidden; color: #fff; background: #8fd3ff; touch-action: none; overscroll-behavior: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; font-family: "Fredoka", var(--font); }
+.kk[hidden], .kk [hidden] { display: none !important; }
+.kk__kanvas { position: absolute; inset: 0; }
+.kk__kanvas canvas { display: block; width: 100%; height: 100%; }
+.kk__efek { position: absolute; inset: 0; pointer-events: none; opacity: 0; }
+.kk__efek.salah { background: radial-gradient(ellipse at center, transparent 40%, rgba(255, 35, 70, .55) 100%); animation: kk-kilat 1s ease-out; }
+.kk__efek.benar { background: radial-gradient(ellipse at center, transparent 40%, rgba(255, 214, 80, .5) 100%); animation: kk-kilat .8s ease-out; }
+@keyframes kk-kilat { 0% { opacity: 1; } 100% { opacity: 0; } }
+
+.kk__hud { position: absolute; inset: 0 0 auto 0; display: flex; flex-direction: column; gap: .5rem; padding: max(.6rem, env(safe-area-inset-top)) max(.7rem, env(safe-area-inset-right)) .6rem max(.7rem, env(safe-area-inset-left)); pointer-events: none; }
+.kk-ikon, .kk__skor, .kk__nyawa, .kk__progres, .kk__tanya, .kk-dengar, .kk__petunjuk, .kk__putar { background: rgba(22, 12, 64, .62); border: 2px solid rgba(255, 255, 255, .28); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 8px 18px -10px rgba(0, 0, 0, .6); }
+.kk__atas { display: flex; align-items: center; gap: .6rem; }
+.kk__alat { display: flex; gap: .4rem; }
+.kk-ikon { flex: none; display: grid; place-items: center; width: clamp(2.3rem, 7vmin, 2.9rem); aspect-ratio: 1; padding: 0; border-radius: 50%; color: #fff; cursor: pointer; pointer-events: auto; transition: transform .15s, background .2s; }
+.kk-ikon:hover { background: rgba(60, 40, 150, .78); } .kk-ikon:active { transform: scale(.9); }
+.kk-ikon svg { width: 52%; fill: currentColor; }
+.kk-ikon[aria-pressed="true"] .kk-coret { display: none; }
+.kk-ikon[aria-pressed="false"] { color: #ff8fa0; }
+.kk__skor { flex: 1 1 auto; display: grid; justify-items: center; min-width: 0; max-width: 17rem; margin: 0 auto; padding: .2rem 1rem .3rem; border-radius: 1.3rem; line-height: 1.1; }
+.kk__nama { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #bfe6ff; }
+.kk__skor b { font: 400 clamp(1.5rem, 5vmin, 2rem) "Lilita One", var(--font); color: #ffe066; text-shadow: 0 .08em 0 rgba(0, 0, 0, .35); }
+.kk__info { display: flex; align-items: center; justify-content: space-between; gap: .8rem; }
+.kk__nyawa { display: flex; gap: .2rem; padding: .3rem .6rem; border-radius: 999px; }
+.kk__nyawa svg { display: block; width: clamp(1.3rem, 4vmin, 1.7rem); fill: #ff4f6b; filter: drop-shadow(0 0 .35rem rgba(255, 79, 107, .7)); }
+.kk__nyawa .hilang svg { fill: rgba(255, 255, 255, .22); filter: none; animation: kk-hati-patah .55s ease-out; }
+@keyframes kk-hati-patah { 0% { transform: scale(1.6); fill: #ff4f6b; } 100% { transform: scale(1); } }
+.kk__progres { display: grid; gap: .2rem; flex: 0 1 14rem; min-width: 7.5rem; padding: .3rem .8rem .4rem; border-radius: 1rem; font-size: .8rem; font-weight: 700; }
+.kk__progres i { display: block; height: .5rem; overflow: hidden; border-radius: 99px; background: rgba(255, 255, 255, .2); }
+.kk__progres b { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #20d6c2, #ffe066); transition: width .4s; }
+.kk__tanya { display: flex; align-items: center; gap: .6rem; align-self: center; max-width: 100%; padding: .45rem 1.1rem; border-radius: 999px; font-weight: 700; font-size: clamp(.95rem, 3vmin, 1.2rem); text-align: center; }
+.kk__tanya svg { flex: none; width: 1.5rem; fill: #20d6c2; animation: kk-suara 1.3s ease-in-out infinite; }
+.kk__tanya.teks { font: 400 clamp(1.1rem, 4vmin, 1.7rem) "Lilita One", var(--font); letter-spacing: .03em; color: #ffe066; }
+@keyframes kk-suara { 50% { transform: scale(1.25); } }
+.kk__putar { display: none; align-self: center; padding: .3rem .9rem; border-radius: 999px; font-size: .78rem; font-weight: 600; text-align: center; }
+
+.kk__pop { position: absolute; left: 0; right: 0; top: 30%; display: grid; justify-items: center; gap: .3rem; padding: 0 1rem; pointer-events: none; }
+.kk-pop { text-align: center; font: 400 clamp(1.5rem, 6vmin, 3rem) "Lilita One", var(--font); letter-spacing: .02em; -webkit-text-stroke: .1em #1d1250; paint-order: stroke fill; text-shadow: 0 .08em 0 #1d1250; animation: kk-pop-naik 1.5s ease-out forwards; }
+.kk-pop.ok { color: #ffe066; } .kk-pop.salah { color: #ff8095; }
+@keyframes kk-pop-naik { 0% { transform: translateY(20px) scale(.4); opacity: 0; } 15% { transform: translateY(0) scale(1.12); opacity: 1; } 30% { transform: scale(1); } 80% { opacity: 1; } 100% { transform: translateY(-60px); opacity: 0; } }
+
+.kk__bawah { position: absolute; left: 0; right: 0; bottom: max(.8rem, env(safe-area-inset-bottom)); display: grid; justify-items: center; gap: .55rem; padding: 0 max(.8rem, env(safe-area-inset-left)) 0 max(.8rem, env(safe-area-inset-right)); pointer-events: none; }
+.kk__petunjuk { margin: 0; padding: .3rem 1rem; border-radius: 999px; font-size: .85rem; font-weight: 600; text-align: center; }
+.kk__tombol { display: flex; gap: .7rem; pointer-events: auto; }
+.kk-dengar { display: inline-flex; align-items: center; gap: .45rem; padding: .55rem 1.2rem .55rem .9rem; border-radius: 999px; font: 700 1rem "Fredoka", var(--font); color: #fff; cursor: pointer; transition: transform .15s, background .2s; }
+.kk-dengar:hover { background: rgba(60, 40, 150, .78); } .kk-dengar:active { transform: scale(.93); }
+.kk-dengar svg { width: 1.3rem; fill: #20d6c2; }
+.kk-berangkat { font-size: clamp(1rem, 3vmin, 1.3rem); padding-right: 1.6em; }
+.kk-berangkat:disabled { cursor: not-allowed; opacity: .55; filter: grayscale(.6); box-shadow: none; transform: none; }
+.kk-berangkat:disabled::after { display: none; }
+.kk__memuat { position: absolute; inset: 0; z-index: 5; display: grid; place-content: center; justify-items: center; gap: 1rem; padding: 1.5rem; text-align: center; font-weight: 700; background: radial-gradient(circle at 50% 40%, #4aaeff, #1a3a8a 80%); }
+.kk__spinner { width: 3.6rem; height: 3.6rem; border: .4rem solid rgba(255, 255, 255, .25); border-top-color: #ffe066; border-radius: 50%; animation: kk-putar .8s linear infinite; }
+@keyframes kk-putar { to { transform: rotate(360deg); } }
+
+/* ---------- Jeda (lapisan di dalam layar game) ---------- */
+.kk__jeda { position: absolute; inset: 0; z-index: 10; display: grid; place-items: center; padding: 1rem; background: rgba(8, 12, 40, .5); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); animation: pudar .3s; }
+.kk__jeda-kotak { animation: buka .45s cubic-bezier(.2, 1.3, .35, 1); }
+/* ---------- Layar sempit / pendek ---------- */
+@media (orientation: portrait) and (max-width: 700px) { .kk__putar { display: block; } }
+@media (max-width: 420px) {
+    .kk-pilih--3 { gap: .4rem; } .kk-opsi__isi { padding: .5rem .15rem; } .kk-opsi__isi b { font-size: 1.05rem; } .kk-opsi__isi small { font-size: .66rem; } .kk-opsi__isi em { font-size: .9rem; }
+    .kk__atas { gap: .35rem; } .kk__alat { gap: .3rem; } .kk__skor { padding-inline: .6rem; }
+}
+@media (max-height: 520px) {
+    .kk__hud { gap: .3rem; padding-top: max(.35rem, env(safe-area-inset-top)); } .kk-ikon { width: 2.1rem; } .kk__progres, .kk__petunjuk, .kk__putar { display: none; } .kk__tanya { padding: .2rem .8rem; }
+    .kk__pop { top: 24%; } .kk-kepala { padding-block: .8rem; } .kk-isi { gap: .7rem; padding-block: .8rem; } .kk-dengar { padding-block: .35rem; }
+}
+@media (prefers-reduced-motion: reduce) { .kk-pop { animation-duration: .01s; } .kk__tanya svg { animation: none; } }
