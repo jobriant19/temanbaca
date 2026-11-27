@@ -35,5 +35,6 @@
     @include('partials.hadiah')
     @include('partials.duel-dialog')
     @include('partials.kereta-kata')
+    @include('partials.pancing-dialog')
     @include('partials.huruf-ngebut')
 @endsection

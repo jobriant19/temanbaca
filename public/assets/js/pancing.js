@@ -508,3 +508,16 @@ function jalan(mode) {
         R.render(S, C);
     });
 }
+
+
+/* ========== MULAI OTOMATIS: nama + jenis soal dari dialog Pancing Pintar di beranda ========== */
+// shortcut: data dikirim lewat sessionStorage (hilang saat tab ditutup), upgrade: query string / session Laravel bila perlu dibagikan antarhalaman
+try {
+    const kiriman = JSON.parse(sessionStorage.getItem('pp:mulai') || 'null');
+    sessionStorage.removeItem('pp:mulai');
+    if (kiriman?.nama && ['huruf', 'kata', 'campur'].includes(kiriman.jenis)) {
+        $('#nama').value = kiriman.nama;
+        form.elements.jenis.value = kiriman.jenis;
+        form.dispatchEvent(new Event('submit', { cancelable: true }));   // memakai validasi & alur setup yang sama
+    }
+} catch (e) { /* tanpa sessionStorage: pemain memakai formulir setup biasa */ }
